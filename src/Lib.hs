@@ -6,6 +6,7 @@
 module Lib where
 
 import Data.Text (Text)
+import qualified Data.Text.IO as T
 import YamlParse.Applicative
 import Control.Monad (when)
 
@@ -66,3 +67,11 @@ eitherPort conf = do
 
 eitherPort2 :: Configuration -> Either String Configuration
 eitherPort2 conf = (\x -> conf{confPort = x}) <$> isValidPort (confPort conf)
+
+version1Parser :: YamlParser Configuration
+version1Parser = objectParser "Configuration" configurationParser
+
+version1 :: IO ()
+version1 =
+  T.putStrLn . prettySchema $
+    explainParser version1Parser
